@@ -23,7 +23,7 @@ class AvbImageManager extends Wire {
     protected $suffixWidth = '0';
     protected $suffixHeight = '0';
     // Default suffix template
-    protected $suffixTemplate = ".{width}x{height}-{values}";
+    protected $suffixTemplate = ".{width}x{height}{separator}{values}";
     // Suffix shortcuts for apply suffix | {separator}VALUE{separator}SHORTCUT
     protected $suffixes = array(
         'blur' => 'bl',
@@ -877,7 +877,11 @@ class AvbImageManager extends Wire {
         // Apply md5() suffix
         if(!is_null($this->config['md5-suffix']) && $this->config['md5-suffix'] === true) $suffix = substr(md5($suffix), 0, 12);
 
-        $suffixStr = ".{$this->suffixWidth}x{$this->suffixHeight}{$this->suffixSeparator}{$suffix}";
+        $suffixStr = str_replace(
+            array("{width}", "{height}", "{separator}", "{values}"),
+            array($this->suffixWidth, $this->suffixHeight, $this->suffixSeparator, $suffix),
+            $this->suffixTemplate
+        );
 
         $path = is_null($path) ? pathinfo($this->image, PATHINFO_DIRNAME) . "/" : $path;
 
