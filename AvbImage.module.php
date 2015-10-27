@@ -23,9 +23,9 @@ class AvbImage extends WireData implements Module, ConfigurableModule {
             'author' => 'İskender TOTOĞLU | @ukyo(community), @trk (Github), http://altivebir.com.tr',
             'href' => 'https://github.com/trk/AvbImage',
             'icon' => 'check-square-o',
-            'singular'   => true,
-            'autoload'   => true,
-            'requires' => 'ProcessWire>=2.5.10'
+            'singular' => true,
+            'autoload' => true,
+            'requires' => 'ProcessWire>=2.5.11'
         );
     }
 
@@ -99,8 +99,37 @@ class AvbImage extends WireData implements Module, ConfigurableModule {
      * @param array $config
      * @return AvbImageManager
      */
-    public function image($config = array()) {
-        return new AvbImageManager($config);
+    public function image($sourceImage, $config = array()) {
+
+        $driver = $this->driver;
+        $md5Suffix = $this->md5Suffix;
+        $suffix = NULL;
+        $suffixSeparator = $this->suffixSeparator;
+
+        if(!empty($config)) {
+            if(array_key_exists('driver', $config)) {
+                if($config['driver'] == 'gd' || $config['driver'] == 'imagick') {
+                    $driver = $config['driver'];
+                }
+            }
+            if(array_key_exists('md5-suffix', $config)) {
+                $md5Suffix = $config['md5-suffix'];
+            }
+            if(array_key_exists('suffix', $config)) {
+                $suffix = $config['suffix'];
+            }
+            if(array_key_exists('suffix-separator', $config)) {
+                $suffixSeparator = $config['suffix-separator'];
+            }
+        }
+
+        return new AvbImageManager(array(
+            'driver' => $driver,
+            'sourceImage' => $sourceImage,
+            'suffix' => $suffix,
+            'md5-suffix' => ($md5Suffix === 1 || $md5Suffix === true) ? true : false,
+            'suffix-separator' => $suffixSeparator
+        ));
     }
 
     /**

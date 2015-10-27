@@ -102,7 +102,7 @@ class AvbImageManager extends Wire {
         $this->configure($config);
 
         // Check source exist?
-        if(!is_null($this->config['pageImage'])) {
+        if(!is_null($this->config['pageImage']) && file_exists($this->config['pageImage']->filename)) {
             $this->pageImage = $this->config['pageImage'];
             $this->image = $this->pageImage->filename;
         } elseif(!is_null($this->config['sourceImage']) && file_exists($this->config['sourceImage'])) {
@@ -971,18 +971,18 @@ class AvbImageManager extends Wire {
                 $pageimage->setFilename($path);
                 $pageimage->setOriginal($this->pageImage);
 
-                return $this->pageImage;
+                return $pageimage;
             }
-            return $this->targetFileFullPath;
+            return $path;
         }
 
         if(!is_null($this->pageImage)) {
             $pageimage = clone $this->pageImage;
-            $pageimage->setFilename($this->targetFileFullPath);
+            $pageimage->setFilename($path);
             $pageimage->setOriginal($this->pageImage);
-            return $this->pageImage;
+            return $pageimage;
         } else {
-            return $this->targetFileFullPath;
+            return $path;
         }
     }
 }
