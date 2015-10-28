@@ -194,9 +194,46 @@ echo "<img src='{$flip->encode('data-url')}' />";
 #### Applying Effects
 
 **filter()**
+
+> Not worked on this !
+
 **pixelate()**
+
+> Applies a pixelation effect to the current image with a given **size** of
+> pixels.
+
+```php
+$pixelate = $page->image()->first()->image()->pixelate(12);
+echo "<img src='{$pixelate->encode('data-url')}' />";
+```
+
 **rotate()**
+
+Rotate the current image counter-clockwise by a given **angle**. Optionally define a **background color** for the uncovered zone after the rotation.
+
+```php
+// rotate image 45 degrees clockwise
+$rotate = $page->image()->first()->image()->rotate(-45);
+echo "<img src='{$rotate->encode('data-url')}' />";
+```
+
 **blur()**
+
+> Apply a gaussian blur filter with a optional amount on the current
+> image. Use values between **0** and **100.**
+> 
+> Note: **Performance intensive on larger amounts of blur with GD driver.**
+> **Use with care.**
+
+```php
+// apply slight blur filter
+$blur1 = $page->image()->first()->image()->blur();
+echo "<img src='{$blur1->encode('data-url')}' />";
+
+// apply stronger blur
+$blur2 = $page->image()->first()->image()->blur(15);
+echo "<img src='{$blur2->encode('data-url')}' />";
+```
 
 #### Drawing
 
