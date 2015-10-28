@@ -20,7 +20,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 
 ### Methods List
 
-**Resizing Images**
+[Resizing Images](#resizing-images)
 
 * [resize()](#resize)
 * [widen()](#widen)
@@ -30,7 +30,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [crop()](#crop)
 * [trim()](#trim)
 
-**Adjusting Images**
+[Adjusting Images](#adjusting-images)
 
 * [gamma()](#gamma)
 * [brightness()](#brightness)
@@ -41,7 +41,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [mask()](#mask)
 * [flip()](#flip)
 
-**Applying Effects**
+[Applying Effects](#applying-effects)
 
 * [filter()](#filter)
 * [pixelate()](#pixelate)
@@ -57,7 +57,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [circle()](#circle)
 * [ellipse()](#ellipse)
 
-**Retrieving Information**
+[Retrieving Information](#retrieving-information)
 
 * [encode()](#encode)
 * [width()](#width)
