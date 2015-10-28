@@ -28,7 +28,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 > third parameter.
 
 ```php
-$resized = $page->image()->first()->image()->resize(500, 300);
+$resized = $page->images()->first()->image()->resize(500, 300);
 echo "<img src='{$resized->encode('data-url')}' />";
 ```
 
@@ -39,7 +39,7 @@ echo "<img src='{$resized->encode('data-url')}' />";
 > additional constraints like preventing possible upsizing.
 
 ```php
-$widen = $page->image()->first()->image()->widen(500);
+$widen = $page->images()->first()->image()->widen(500);
 echo "<img src='{$widen->encode('data-url')}' />";
 ```
 **heighten()**
@@ -49,7 +49,7 @@ echo "<img src='{$widen->encode('data-url')}' />";
 > additional constraints like preventing possible upsizing.
 
 ```php
-$heighten = $page->image()->first()->image()->heighten(300);
+$heighten = $page->images()->first()->image()->heighten(300);
 echo "<img src='{$heighten->encode('data-url')}' />";
 ```
 
@@ -63,7 +63,7 @@ echo "<img src='{$heighten->encode('data-url')}' />";
 > the cutout as fourth parameter.
 
 ```php
-$fit = $page->image()->first()->image()->fit(600, 360);
+$fit = $page->images()->first()->image()->fit(600, 360);
 echo "<img src='{$fit->encode('data-url')}' />";
 ```
 
@@ -76,7 +76,7 @@ echo "<img src='{$fit->encode('data-url')}' />";
 > can also pass a **background color** for the emerging area of the image.
 
 ```php
-$resizeCanvas = $page->image()->first()->image()->resizeCanvas(1280, 720, 'center', false, 'ff00ff');
+$resizeCanvas = $page->images()->first()->image()->resizeCanvas(1280, 720, 'center', false, 'ff00ff');
 echo "<img src='{$resizeCanvas->encode('data-url')}' />";
 ```
 
@@ -87,7 +87,7 @@ echo "<img src='{$resizeCanvas->encode('data-url')}' />";
 > the top-left corner of the cutout to a certain position.
 
 ```php
-$crop = $page->image()->first()->image()->crop(100, 100, 25, 25);
+$crop = $page->images()->first()->image()->crop(100, 100, 25, 25);
 echo "<img src='{$crop->encode('data-url')}' />";
 ```
 
@@ -99,7 +99,7 @@ echo "<img src='{$crop->encode('data-url')}' />";
 > and add a **feathering** border around the trimed image.
 
 ```php
-$trim = $page->image()->first()->image()->trim('transparent', array('top', 'bottom'));
+$trim = $page->images()->first()->image()->trim('transparent', array('top', 'bottom'));
 echo "<img src='{$trim->encode('data-url')}' />";
 ```
 
@@ -110,7 +110,7 @@ echo "<img src='{$trim->encode('data-url')}' />";
 > Performs a gamma correction operation on the current image.
 
 ```php
-$gamma = $page->image()->first()->image()->gamma(1.6);
+$gamma = $page->images()->first()->image()->gamma(1.6);
 echo "<img src='{$gamma->encode('data-url')}' />";
 ```
 
@@ -121,7 +121,7 @@ echo "<img src='{$gamma->encode('data-url')}' />";
 > **+100** for max. brightness.
 
 ```php
-$brightness = $page->image()->first()->image()->brightness(35);
+$brightness = $page->images()->first()->image()->brightness(35);
 echo "<img src='{$brightness->encode('data-url')}' />";
 ```
 **contrast()**
@@ -131,7 +131,7 @@ echo "<img src='{$brightness->encode('data-url')}' />";
 > **+100** for max. contrast.
 
 ```php
-$contrast = $page->image()->first()->image()->contrast(65);
+$contrast = $page->images()->first()->image()->contrast(65);
 echo "<img src='{$contrast->encode('data-url')}' />";
 ```
 
@@ -143,7 +143,7 @@ echo "<img src='{$contrast->encode('data-url')}' />";
 > and **-100** to take out all the certain color on the image.
 
 ```php
-$colorize = $page->image()->first()->image()->colorize(0, 30, 0);
+$colorize = $page->images()->first()->image()->colorize(0, 30, 0);
 echo "<img src='{$colorize->encode('data-url')}' />";
 ```
 **greyscale()**
@@ -151,7 +151,7 @@ echo "<img src='{$colorize->encode('data-url')}' />";
 > Turns image into a greyscale version.
 
 ```php
-$greyscale = $page->image()->first()->image()->greyscale();
+$greyscale = $page->images()->first()->image()->greyscale();
 echo "<img src='{$greyscale->encode('data-url')}' />";
 ```
 
@@ -160,7 +160,7 @@ echo "<img src='{$greyscale->encode('data-url')}' />";
 > Reverses all colors of the current image.
 
 ```php
-$invert = $page->image()->first()->image()->invert();
+$invert = $page->images()->first()->image()->invert();
 echo "<img src='{$invert->encode('data-url')}' />";
 ```
 
@@ -174,10 +174,10 @@ echo "<img src='{$invert->encode('data-url')}' />";
 > maintained.
 
 ```php
-$mask1 = $page->image()->first()->image()->mask('public/mask.png');
+$mask1 = $page->images()->first()->image()->mask('public/mask.png');
 echo "<img src='{$mask1->encode('data-url')}' />";
 
-$mask2 = $page->image()->first()->image()->mask('public/alpha.png', true);
+$mask2 = $page->images()->first()->image()->mask('public/alpha.png', true);
 echo "<img src='{$mask2->encode('data-url')}' />";
 ```
 
@@ -187,7 +187,7 @@ echo "<img src='{$mask2->encode('data-url')}' />";
 > mode.
 
 ```php
-$flip = $page->image()->first()->image()->flip('v');
+$flip = $page->images()->first()->image()->flip('v');
 echo "<img src='{$flip->encode('data-url')}' />";
 ```
 
@@ -203,7 +203,7 @@ echo "<img src='{$flip->encode('data-url')}' />";
 > pixels.
 
 ```php
-$pixelate = $page->image()->first()->image()->pixelate(12);
+$pixelate = $page->images()->first()->image()->pixelate(12);
 echo "<img src='{$pixelate->encode('data-url')}' />";
 ```
 
@@ -213,7 +213,7 @@ Rotate the current image counter-clockwise by a given **angle**. Optionally defi
 
 ```php
 // rotate image 45 degrees clockwise
-$rotate = $page->image()->first()->image()->rotate(-45);
+$rotate = $page->images()->first()->image()->rotate(-45);
 echo "<img src='{$rotate->encode('data-url')}' />";
 ```
 
@@ -227,22 +227,115 @@ echo "<img src='{$rotate->encode('data-url')}' />";
 
 ```php
 // apply slight blur filter
-$blur1 = $page->image()->first()->image()->blur();
+$blur1 = $page->images()->first()->image()->blur();
 echo "<img src='{$blur1->encode('data-url')}' />";
 
 // apply stronger blur
-$blur2 = $page->image()->first()->image()->blur(15);
+$blur2 = $page->images()->first()->image()->blur(15);
 echo "<img src='{$blur2->encode('data-url')}' />";
 ```
 
 #### Drawing
 
 **text()**
+
+> Write a **text** string to the current image at an optional **x,y basepoint
+> position**. You can define more details like font-size, font-file and
+> alignment via a **callback** as the fourth parameter.
+
+```php
+$text1 = $page->images()->first()->image()->text('The quick brown fox jumps over the lazy dog.', 120, 100);
+echo "<img src='{$text1->encode('data-url')}' />";
+
+$text2 = $page->images()->first()->image()->text('foo', 0, 0, function($font) {
+    $font->file('foo/bar.ttf');
+    $font->size(24);
+    $font->color('#fdf6e3');
+    $font->align('center');
+    $font->valign('top');
+    $font->angle(45);
+});
+echo "<img src='{$text2->encode('data-url')}' />";
+```
+
 **pixel()**
+
+> Draw a single pixel in given **color** on **x**, **y** position.
+
+```php
+$pixel = $page->images()->first()->image()->pixel('#ff0000', 64, 64);
+echo "<img src='{$pixel->encode('data-url')}' />";
+```
+
 **line()**
+
+> Draw a line from **x, y point 1* to **x, y point 2** on current image. Define
+> **color and/or width** of line in an optional Closure callback.
+
+```php
+$line = $page->images()->first()->image()->line(10, 10, 195, 195, function ($draw) {
+    $draw->color('#f00');
+    $draw->width(5);
+});
+echo "<img src='{$line->encode('data-url')}' />";
+```
+
 **rectangle()**
+
+> Draw a colored rectangle on current image with top-left corner on **x,y**
+> **point 1** and bottom-right corner at **x,y point 2**. Define the overall
+> appearance of the shape by passing a Closure **callback** as an optional
+> parameter.
+
+```php
+// draw an empty rectangle border
+$rectangle1 = $page->images()->first()->image()->rectangle(10, 10, 190, 190);
+echo "<img src='{$rectangle1->encode('data-url')}' />";
+
+// draw filled red rectangle
+$rectangle2 = $page->images()->first()->image()->rectangle(5, 5, 195, 195, function ($draw) {
+    $draw->background('#ff0000');
+});
+echo "<img src='{$rectangle2->encode('data-url')}' />";
+```
+
 **circle()**
+
+> Draw a circle at given **x, y, coordinates** with given **diameter**.
+> You can define the **appearance** of the circle by an optional closure
+> callback.
+
+```php
+$circle1 = $page->images()->first()->image()->circle(100, 50, 50, function ($draw) {
+    $draw->background('#0000ff');
+});
+echo "<img src='{$circle1->encode('data-url')}' />";
+
+$circle2 = $page->images()->first()->image()->circle(10, 100, 100, function ($draw) {
+    $draw->background('#0000ff');
+    $draw->border(1, '#f00');
+});
+echo "<img src='{$circle2->encode('data-url')}' />";
+```
+
 **ellipse()**
+
+> Draw a **colored** ellipse at given **x, y, coordinates**. You can
+> define **width** and **height** and set the **appearance** of the
+> circle by an optional closure callback.
+
+```php
+$ellipse1 = $page->images()->first()->image()->ellipse(25, 30, 50, 50, function ($draw) {
+    $draw->background('#0000ff');
+});
+echo "<img src='{$ellipse1->encode('data-url')}' />";
+
+$ellipse2 = $page->images()->first()->image()->ellipse(60, 120, 100, 100, function ($draw) {
+    $draw->background('#0000ff');
+    $draw->border(1, '#ff0000');
+});
+echo "<img src='{$ellipse2->encode('data-url')}' />";
+```
 
 #### Retrieving Information
 
@@ -259,7 +352,7 @@ echo $page->image()->first()->image()->width();
 > Returns the height in pixels of the current image.
 
 ```php
-echo $page->image()->first()->image()->height();
+echo $page->images()->first()->image()->height();
 ```
 
 **mime()**
@@ -279,7 +372,7 @@ echo $page->image()->first()->image()->mime();
 > **Windows users must also have the mbstring extension enabled.**
 
 ```php
-$exif = $page->image()->first()->image()->exif();
+$exif = $page->images()->first()->image()->exif();
 echo '<pre>' . print_r($exif, true) . '</pre>';
 ```
 
@@ -288,6 +381,6 @@ echo '<pre>' . print_r($exif, true) . '</pre>';
 > Read IPTC meta data from current image.
 
 ```php
-$iptc = $page->image()->first()->image()->iptc();
+$iptc = $page->images()->first()->image()->iptc();
 echo '<pre>' . print_r($iptc, true) . '</pre>';
 ```
