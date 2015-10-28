@@ -26,6 +26,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [widen()](#widen)
 * [heighten()](#heighten)
 * [fit()](#fit)
+* [canvas()](#canvas)
 * [resizeCanvas()](#resizecanvas)
 * [crop()](#crop)
 * [trim()](#trim)
@@ -40,6 +41,9 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [invert()](#invert)
 * [mask()](#mask)
 * [flip()](#flip)
+* [opacity()](#opacity)
+* [fill()](#fill)
+* [insert()](#insert)
 
 [Applying Effects](#applying-effects)
 
@@ -47,6 +51,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [pixelate()](#pixelate)
 * [rotate()](#rotate)
 * [blur()](#blur)
+* [sharpen()](#sharpen)
 
 [Drawing](#drawing)
 
@@ -56,6 +61,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [rectangle()](#rectangle)
 * [circle()](#circle)
 * [ellipse()](#ellipse)
+* [polygon()](#polygon)
 
 [Retrieving Information](#retrieving-information)
 
@@ -65,6 +71,17 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [mime()](#mime)
 * [exif()](#exif)
 * [iptc()](#iptc)
+* [backup()](#backup)
+* [destroy()](#destroy)
+* [save()](#save)
+* [filesize()](#filesize)
+* [getCore()](#getCore)
+* [reset()](#reset)
+* [response()](#response)
+* [pickColor()](#pickColor)
+* [interlace()](#interlace)
+* [limitColors()](#limitColors)
+* [orientate()](#orientate)
 
 ### Methods
 
@@ -114,6 +131,17 @@ echo "<img src='{$heighten->encode('data-url')}' />";
 ```php
 $fit = $page->images()->first()->image()->fit(600, 360);
 echo "<img src='{$fit->encode('data-url')}' />";
+```
+
+##### canvas()
+
+> Factory method to create a new empty image instance with given width and height.
+> You can define a background-color optionally. By default the canvas background
+> is transparent.
+
+```php
+$canvas = $page->images()->first()->image()->canvas(32, 32, '#ff0000')
+echo "<img src='{$canvas->encode('data-url')}' />";
 ```
 
 ##### resizeCanvas()
@@ -240,6 +268,43 @@ $flip = $page->images()->first()->image()->flip('v');
 echo "<img src='{$flip->encode('data-url')}' />";
 ```
 
+##### opacity()
+
+> Set the **opacity** in percent of the current image ranging from 100%
+> for opaque and 0% for full transparency.
+
+> Note: **Performance intensive on larger images. Use with care.**
+
+```php
+$opacity = $page->images()->first()->image()->opacity(50);
+echo "<img src='{$opacity->encode('data-url')}' />";
+```
+
+##### fill()
+
+> Fill current image with given color or another image used as tile for filling.
+> Pass optional x, y coordinates to start at a certain point.
+>
+> If a certain position is defined, the color at that point on the original
+> image is used to perform a flood fill. If no x,y coordinates are passed,
+> the whole picture is filled no matter what is beneath.
+
+```php
+$fill = $page->images()->first()->image()->fill('#ff00ff', 0, 0);
+echo "<img src='{$fill->encode('data-url')}' />";
+```
+
+##### insert()
+
+> Paste a given image source over the current image with an optional position
+> and a offset coordinate. This method can be used to apply another image as
+> watermark because the transparency values are maintained.
+
+```php
+$insert = $page->images()->first()->image()->insert('watermark.png', 'bottom-right', 10, 10);
+echo "<img src='{$insert->encode('data-url')}' />";
+```
+
 #### Applying Effects
 
 ##### filter()
@@ -258,7 +323,8 @@ echo "<img src='{$pixelate->encode('data-url')}' />";
 
 ##### rotate()
 
-Rotate the current image counter-clockwise by a given **angle**. Optionally define a **background color** for the uncovered zone after the rotation.
+> Rotate the current image counter-clockwise by a given **angle**.
+> Optionally define a **background color** for the uncovered zone after the rotation.
 
 ```php
 // rotate image 45 degrees clockwise
@@ -282,6 +348,15 @@ echo "<img src='{$blur1->encode('data-url')}' />";
 // apply stronger blur
 $blur2 = $page->images()->first()->image()->blur(15);
 echo "<img src='{$blur2->encode('data-url')}' />";
+```
+
+##### sharpen()
+
+> Sharpen current image with an optional amount. Use values between 0 and 100.
+
+```php
+$sharpen = $page->images()->first()->image()->sharpen(15);
+echo "<img src='{$sharpen->encode('data-url')}' />";
 ```
 
 #### Drawing
@@ -386,6 +461,31 @@ $ellipse2 = $page->images()->first()->image()->ellipse(60, 120, 100, 100, functi
 echo "<img src='{$ellipse2->encode('data-url')}' />";
 ```
 
+##### polygon()
+
+> Draw a colored polygon with given points. You can define
+> the appearance of the polygon by an optional closure callback.
+
+```php
+// define polygon points
+$points = array(
+    40,  50,  // Point 1 (x, y)
+    20,  240, // Point 2 (x, y)
+    60,  60,  // Point 3 (x, y)
+    240, 20,  // Point 4 (x, y)
+    50,  40,  // Point 5 (x, y)
+    10,  10   // Point 6 (x, y)
+);
+
+// draw a filled blue polygon with red border
+$polygon = $page->images()->first()->image()->polygon($points, function ($draw) {
+    $draw->background('#0000ff');
+    $draw->border(1, '#ff0000');
+});
+
+echo "<img src='{$polygon->encode('data-url')}' />";
+```
+
 #### Retrieving Information
 
 ##### encode()
@@ -446,4 +546,196 @@ echo '<pre>' . print_r($exif, true) . '</pre>';
 ```php
 $iptc = $page->images()->first()->image()->iptc();
 echo '<pre>' . print_r($iptc, true) . '</pre>';
+```
+
+##### backup()
+
+> Backups current image state as fallback for [reset method](#reset) under an optional **name**.
+> Overwrites older state on every call, unless a different name is passed.
+
+```php
+$img = $page->images()->first()->image();
+
+// fill image with color
+$img->fill('#b53717');
+
+// backup image with colored background
+$img->backup();
+
+// fill image with tiled image
+$img->fill('tile.png');
+
+// return to colored background
+$img->reset();
+```
+
+##### destroy()
+
+> Frees memory associated with the current image instance **before** the PHP script ends.
+> Normally resources are destroyed automatically **after** the script is finished.
+
+```php
+$img = $page->images()->first()->image();
+
+// perform some modifications and destroy resource
+$img->resize(320, 240);
+$img->save();
+$img->destroy();
+```
+
+##### save()
+
+> Save the current state of the image object in filesystem. Define optionally a certain path
+> where the image should be saved. You can also optionally set the quality of the image file
+> as second parameter.
+>
+> The image type will be defined by the file extension. For example if you pass foo.jpg the
+> image will be saved as a JPG file. If there is no extension available, the library will first
+> try to use the MIME type of the image to define the encoding, if this also fails the image
+> will be encoded as JPEG.
+>
+> Furthermore the image will always be saved in RGB color mode without an embeded color profile.
+
+```php
+$img = $page->images()->first()->image();
+
+// save file as png with medium quality
+$img->save('public/bar.png', 60);
+
+// save the same file as jpeg with default quality
+$img->save('public/bar.jpg');
+```
+
+##### filesize()
+
+> Gets the file size for the current image, if instance is initiated from an actual file.
+
+```php
+$img = $page->images()->first()->image();
+
+// get file size
+$size = $img->filesize();
+echo $size;
+```
+
+##### getCore()
+
+> Returns the current image in core format of the particular driver. If you're using GD,
+> you will get the the current GD resource as return value. If you have setup the Imagick driver,
+> the method will return the current image information as an Imagick object.
+
+```php
+$img = $page->images()->first()->image();
+
+// get Imagick instance
+$imagick = $img->getCore();
+
+// apply Imagick function
+$imagick->embossImage(0, 1);
+```
+
+##### reset()
+
+> Resets all of the modifications to a state saved previously by [backup](#backup) under an optional **name**.
+
+```php
+$img = $page->images()->first()->image();
+
+// backup status
+$img->backup();
+
+// perform some modifications
+$img->resize(320, 240);
+$img->invert();
+$img->save();
+
+// reset image (return to backup state)
+$img->reset();
+
+// perform other modifications
+$img->resize(640, 480);
+$img->invert();
+$img->save();
+```
+
+##### response()
+
+> Sends HTTP response with current image in given **format** and **quality**.
+
+```php
+$img = $page->images()->first()->image();
+
+// send HTTP header and output image data
+echo $img->response();
+```
+
+##### pickColor()
+
+> Pick a color at point x, y out of current image and return in optional given **format.**
+
+```php
+$img = $page->images()->first()->image();
+
+// pick a color at position as array
+$arraycolor = $img->pickColor(100, 100);
+
+// pick a color at position as integer
+$intcolor = $img->pickColor(100, 100, 'int');
+
+// pick a color at position and format it as hex string
+$hexcolor = $img->pickColor(100, 100, 'hex');
+```
+
+##### interlace()
+
+> Determine whether an image should be encoded in interlaced or standard mode by toggling
+> **interlace** mode with a boolean parameter. If an JPEG image is set interlaced the image
+> will be processed as a progressive JPEG.
+
+```php
+$img = $page->images()->first()->image();
+
+// enable interlacing
+$img->interlace();
+
+// save image interlaced
+$img->save();
+
+//---
+
+$img = $page->images()->first()->image();
+
+// disable interlacing
+$img->interlace(false);
+
+// save image in standard mode
+$img->save();
+```
+
+##### limitColors()
+
+> Method converts the existing colors of the current image into a **color** table with a given
+> maximum count of colors. The function preserves as much alpha channel information as
+> possible and blends transarent pixels against a optional **matte color**.
+
+```php
+$img = $page->images()->first()->image();
+
+// limit colors to 255 (PNG-8) blending transparency against orange
+$img->limitColors(255, '#ff9900');
+```
+
+##### orientate()
+
+> This method reads the EXIF image profile setting **'Orientation'** and performs a
+> rotation on the image to display the image correctly.
+
+> **Note: PHP must be compiled in with --enable-exif to use this method. Windows users must**
+> **also have the mbstring extension enabled.**
+
+```php
+$img = $page->images()->first()->image();
+
+$img->orientate();
+
 ```
