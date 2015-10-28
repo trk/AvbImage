@@ -96,13 +96,76 @@ echo "<img src='{$trim->encode('data-url')}' />";
 #### Adjusting Images
 
 **gamma()**
+
+> Performs a gamma correction operation on the current image.
+
+```php
+$gamma = $page->image()->first()->image()->gamma(1.6);
+echo "<img src='{$gamma->encode('data-url')}' />";
+```
+
 **brightness()**
+
+> Changes the brightness of the current image by the given **level**. Use
+> values between **-100** for min. brightness **0** for no change and 
+> **+100** for max. brightness.
+```php
+$brightness = $page->image()->first()->image()->brightness(35);
+echo "<img src='{$brightness->encode('data-url')}' />";
+```
 **contrast()**
+> Changes the contrast of the current image by the given **level**. Use
+> values between **-100** for min. contrast **0** for no change and
+> **+100** for max. contrast.
+
+```php
+$contrast = $page->image()->first()->image()->contrast(65);
+echo "<img src='{$contrast->encode('data-url')}' />";
+```
 **colorize()**
+
+> Change the **RGB** color values of the current image on the given channels
+> **red**, **green** and **blue**. The input values are normalized so you have to
+> include parameters from **100** for maximum color value **0** for no change
+> and **-100** to take out all the certain color on the image.
+```php
+$colorize = $page->image()->first()->image()->colorize(0, 30, 0);
+echo "<img src='{$colorize->encode('data-url')}' />";
+```
 **greyscale()**
+> Turns image into a greyscale version.
+```php
+$greyscale = $page->image()->first()->image()->greyscale();
+echo "<img src='{$greyscale->encode('data-url')}' />";
+```
 **invert()**
+> Reverses all colors of the current image.
+```php
+$invert = $page->image()->first()->image()->invert();
+echo "<img src='{$invert->encode('data-url')}' />";
+```
 **mask()**
+> Apply a given **image source** as alpha mask to the current image to
+> change current opacity. Mask will be resized to the current image
+> size. By default a greyscale version of the mask is converted to alpha
+> values, but you can set **mask_with_alpha** to apply the actual alpha
+> channel. Any transparency values of the current image will be
+> maintained.
+```php
+$mask1 = $page->image()->first()->image()->mask('public/mask.png');
+echo "<img src='{$mask1->encode('data-url')}' />";
+
+$mask2 = $page->image()->first()->image()->mask('public/alpha.png', true);
+echo "<img src='{$mask2->encode('data-url')}' />";
+```
 **flip()**
+
+> Mirror the current image horizontally or vertically by specifying the
+> mode.
+```php
+$flip = $page->image()->first()->image()->flip('v');
+echo "<img src='{$flip->encode('data-url')}' />";
+```
 
 #### Applying Effects
 
