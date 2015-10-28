@@ -2,7 +2,7 @@
 
 This module using [Intervention Image](https://github.com/Intervention/image) **PHP image handling and manipulation** library.
 
-Big thansk to [@olivervogel](https://github.com/Intervention/image)
+Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 
 ### Module Author
 
