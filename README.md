@@ -600,6 +600,13 @@ $img->destroy();
 ```php
 $img = $page->images()->first()->image();
 
+$greyscale = $img->greyscale()->save();
+echo "<img src='{$greyscale->url}' />";
+
+// save file medium quality
+$quality = $img->greyscale()->save(null, 60);
+echo "<img src='{$greyscale->url}' />";
+
 // save file as png with medium quality
 $img->save('public/bar.png', 60);
 
