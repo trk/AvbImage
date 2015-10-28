@@ -18,7 +18,56 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 - GD Library (>=2.0)
 - Imagick PHP extension (>=6.5.7)
 
+### Methods List
+
+**Resizing Images**
+
+* [resize()](#resize)
+* [widen()](#widen)
+* [heighten()](#heighten)
+* [fit()](#fit)
+* [resizeCanvas()](#resizecanvas)
+* [crop()](#crop)
+* [trim()](#trim)
+
+**Adjusting Images**
+
+* [gamma()](#gamma)
+* [brightness()](#brightness)
+* [contrast()](#contrast)
+* [colorize()](#colorize)
+* [greyscale()](#greyscale)
+* [invert()](#invert)
+* [mask()](#mask)
+* [flip()](#flip)
+
+**Applying Effects**
+
+* [filter()](#filter)
+* [pixelate()](#pixelate)
+* [rotate()](#rotate)
+* [blur()](#blur)
+
+**Drawing**
+
+* [text()](#text)
+* [pixel()](#pixel)
+* [line()](#line)
+* [rectangle()](#rectangle)
+* [circle()](#circle)
+* [ellipse()](#ellipse)
+
+**Retrieving Information**
+
+* [encode()](#encode)
+* [width()](#width)
+* [height()](#height)
+* [mime()](#mime)
+* [exif()](#exif)
+* [iptc()](#iptc)
+
 ### Methods
+
 #### Resizing Images
 
 ##### resize()
