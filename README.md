@@ -48,7 +48,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 * [rotate()](#rotate)
 * [blur()](#blur)
 
-**Drawing**
+[Drawing](#drawing)
 
 * [text()](#text)
 * [pixel()](#pixel)
