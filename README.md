@@ -2,7 +2,7 @@
 
 This module using [Intervention Image](https://github.com/Intervention/image) **PHP image handling and manipulation** library.
 
-Big thansk to [Oliver Vogel](https://github.com/olivervogel)
+Big thanks to [Oliver Vogel](https://github.com/olivervogel)
 
 ### Module Author
 
@@ -10,6 +10,7 @@ Big thansk to [Oliver Vogel](https://github.com/olivervogel)
 
 ### Requirements
 
+- ProcessWire >= 2.5.11
 - PHP >=5.4
 - Fileinfo Extension
 
