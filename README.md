@@ -246,8 +246,48 @@ echo "<img src='{$blur2->encode('data-url')}' />";
 
 #### Retrieving Information
 
-**width**()
+**width()**
+
+> Returns the width in pixels of the current image.
+
+```php
+echo $page->image()->first()->image()->width();
+```
+
 **height()**
+
+> Returns the height in pixels of the current image.
+
+```php
+echo $page->image()->first()->image()->height();
+```
+
 **mime()**
+
+> Read MIME Type of current image instance, if it's already defined.
+
+```php
+echo $page->image()->first()->image()->mime();
+```
+
 **exif()**
+
+> Read Exif meta data from current image. Image object must be
+> instantiated from file path.
+> 
+> Note: **PHP must be compiled in with --enable-exif to use this method.**
+> **Windows users must also have the mbstring extension enabled.**
+
+```php
+$exif = $page->image()->first()->image()->exif();
+echo '<pre>' . print_r($exif, true) . '</pre>';
+```
+
 **iptc()**
+
+> Read IPTC meta data from current image.
+
+```php
+$iptc = $page->image()->first()->image()->iptc();
+echo '<pre>' . print_r($iptc, true) . '</pre>';
+```
