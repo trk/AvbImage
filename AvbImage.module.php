@@ -19,7 +19,7 @@ class AvbImage extends WireData implements Module, ConfigurableModule {
         return array(
             'title' => 'AvbImage',
             'summary' => 'Image Manipulation Module for ProcessWire',
-            'version' => 1,
+            'version' => 2,
             'author' => 'İskender TOTOĞLU | @ukyo(community), @trk (Github), http://altivebir.com.tr',
             'href' => 'https://github.com/trk/AvbImage',
             'icon' => 'check-square-o',

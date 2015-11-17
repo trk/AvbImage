@@ -13,10 +13,13 @@ use Intervention\Image\ImageManager;
 class AvbImageManager extends Wire {
     // Function Triggers : This is for true suffix replacement
     protected $triggers = NULL;
-    // Source File (PageImage or Given Source Image) path
-    protected $sourceFile;
+    // Target PATH
+    protected $targetPath=NULL;
     // Image suffix
     protected $suffix = NULL;
+    // Generated Suffix for IMAGE
+    protected $_suffix = NULL;
+
     // Called methods and options as suffix
     protected $suffixArray = array();
     // Default width height values
@@ -69,7 +72,11 @@ class AvbImageManager extends Wire {
     protected $sourceImage=NULL;
     // Current Image
     protected $image=NULL;
+    protected $sourceFilename=NULL;
+    protected $sourceFileExtension=NULL;
+
     // Target file options
+    protected $hasTarget=FALSE;
     protected $targetFilename;
     protected $targetFileExtension;
     protected $targetFullFilename;
@@ -87,7 +94,8 @@ class AvbImageManager extends Wire {
         'sourceImage' => null,
         'suffix' => null,
         'md5-suffix' => null,
-        'suffix-separator' => '-'
+        'suffix-separator' => '-',
+        'targetPath' => NULL
     );
 
     /**
@@ -106,10 +114,19 @@ class AvbImageManager extends Wire {
             $this->pageImage = $this->config['pageImage'];
             $this->image = $this->pageImage->filename;
         } elseif(!is_null($this->config['sourceImage']) && file_exists($this->config['sourceImage'])) {
-            $this->sourceImage = $this->config['sourceImage'];
-            $this->image = $this->sourceImage;
+            $this->image = $this->config['sourceImage'];
         } else {
             throw new WireException('Source image could not found, please be sure image file exist.');
+        }
+
+        // Set Source Filename and Extension
+        $this->sourceFilename = pathinfo($this->image, PATHINFO_FILENAME);
+        $this->sourceFileExtension = "." . pathinfo($this->image, PATHINFO_EXTENSION);
+
+        if(!is_null($this->config['targetPath'])) {
+            $this->targetPath = $this->config['targetPath'];
+        } else {
+            $this->targetPath = pathinfo($this->image, PATHINFO_DIRNAME) . "/";
         }
 
         // Setup Suffix For Check Image Exist ?
@@ -495,18 +512,6 @@ class AvbImageManager extends Wire {
     }
 
     /**
-     * Universal factory method to create a new image instance from source, which can be a filepath, a GD image resource, an Imagick object or a binary image data.
-     *
-     * @param $data
-     * @return mixed
-     */
-    /*
-    public function make($data) {
-        return $this->imageManager->make($data);
-    }
-    */
-
-    /**
      * Apply a given image source as alpha mask to the current image to change current opacity.
      * Mask will be resized to the current image size.
      * By default a greyscale version of the mask is converted to alpha values,
@@ -844,6 +849,46 @@ class AvbImageManager extends Wire {
         return $this->returnTrigger('basePath');
     }
 
+    protected function setSuffix() {
+        // Check Suffix
+        if(is_null($this->_suffix)) {
+            // Generate file suffix
+            if(!is_null($this->suffix) && !is_array($this->suffix)) {
+                $this->_suffix = $this->suffix;
+            } elseif(!empty($this->suffixArray)) {
+                foreach($this->suffixArray as $key => $sfx) {
+                    if($sfx != "") $sfx = $sfx . $this->suffixSeparator;
+                    $this->_suffix .= $sfx . $this->suffixes[$key];
+                }
+            } else {
+                $this->_suffix = "";
+            }
+        }
+
+        // Apply md5() suffix
+        if(!is_null($this->config['md5-suffix']) && $this->config['md5-suffix'] === true) $this->_suffix = substr(md5($this->_suffix), 0, 12);
+
+        $suffixStr = str_replace(
+            array("{width}", "{height}", "{separator}", "{values}"),
+            array($this->suffixWidth, $this->suffixHeight, $this->suffixSeparator, $this->_suffix),
+            $this->suffixTemplate
+        );
+
+        $this->_suffix = $suffixStr;
+    }
+
+    protected function setTargetFile() {
+
+        $this->targetFilename = $this->sourceFilename . $this->_suffix;
+        $this->targetFileExtension = $this->sourceFileExtension;
+        $this->targetFullFilename = $this->targetFilename . $this->targetFileExtension;
+
+        $this->targetFilePath = $this->targetPath;
+        $this->targetFileFullPath = $this->targetPath . $this->targetFullFilename;
+
+        if(file_exists($this->targetFileFullPath)) $this->hasTarget = TRUE;
+    }
+
     /**
      * This trigger working for return functions
      *
@@ -852,63 +897,43 @@ class AvbImageManager extends Wire {
      * @return mixed
      */
     protected function returnTrigger($function, $args = array()) {
-        $manager = $this->trigger();
-        return $this->callFunction($manager, $function, $args, true);
+
+        $this->beforeTrigger();
+
+        if($this->hasTarget === FALSE) {
+            $imageManager = new ImageManager(array(
+                'driver' => $this->config['driver']
+            ));
+
+            $manager = $imageManager->make($this->image);
+            return $this->callFunction($manager, $function, $args, true);
+        }
     }
 
     /**
-     * Trigger Functions
+     * Trigger Runner
+     *
+     * @param $manager
+     * @return string
      */
-    protected function trigger($path=null) {
-
-        // Generate file suffix
-        $suffix = "";
-        if(!is_null($this->suffix) && !is_array($this->suffix)) {
-            $suffix = $this->suffixSeparator . $this->suffix;
-        } elseif(!empty($this->suffixArray)) {
-            foreach($this->suffixArray as $key => $sfx) {
-                if($sfx != "") $sfx = $sfx . $this->suffixSeparator;
-                $suffix .= $sfx . $this->suffixes[$key];
+    protected function triggerRunner($manager) {
+        if(is_array($this->triggers)) {
+            foreach($this->triggers as $function => $args) {
+                $manager = $this->callFunction($manager, $function, $args);
             }
-        } else {
-            $suffix = "";
         }
-
-        // Apply md5() suffix
-        if(!is_null($this->config['md5-suffix']) && $this->config['md5-suffix'] === true) $suffix = substr(md5($suffix), 0, 12);
-
-        $suffixStr = str_replace(
-            array("{width}", "{height}", "{separator}", "{values}"),
-            array($this->suffixWidth, $this->suffixHeight, $this->suffixSeparator, $suffix),
-            $this->suffixTemplate
-        );
-
-        $path = is_null($path) ? pathinfo($this->image, PATHINFO_DIRNAME) . "/" : $path;
-
-        // Prepare target file full path with suffix
-        $this->targetFilename = pathinfo($this->image, PATHINFO_FILENAME);
-        $this->targetFileExtension = "." . pathinfo($this->image, PATHINFO_EXTENSION);
-        $this->targetFullFilename = $this->targetFilename . $suffixStr . $this->targetFileExtension;
-        $this->targetFilePath = pathinfo($this->image, PATHINFO_DIRNAME);
-        $this->targetFileFullPath = $path . $this->targetFullFilename;
-
-        if(!file_exists($this->targetFileFullPath)) {
-            $image = $this->image;
-        } else {
-            $image = $this->targetFileFullPath;
-        }
-
-        $imageManager = new ImageManager(array(
-            'driver' => $this->config['driver']
-        ));
-
-        $manager = $imageManager->make($image);
-
-        if(!file_exists($this->targetFileFullPath)) {
-            if(is_array($this->triggers)) foreach($this->triggers as $function => $args) $this->callFunction($manager, $function, $args);
-        }
-
         return $manager;
+    }
+
+    /**
+     * Made some check before Trigger Runner
+     */
+    protected function beforeTrigger() {
+        // Set target File Suffix options
+        if(is_null($this->_suffix)) $this->setSuffix();
+        // Set Target File Options
+        if(is_null($this->targetFileFullPath)) $this->setTargetFile();
+        return;
     }
 
     /**
@@ -960,33 +985,39 @@ class AvbImageManager extends Wire {
     /**
      * Saves encoded image in filesystem
      *
-     * @param null $path
      * @param null $quality
-     * @return $this
+     * @return array|null
      */
-    public function save($path = null, $quality = null) {
-        $manager = $this->trigger();
-        $path = is_null($path) ? $this->targetFileFullPath : $path;
+    public function save($quality = null) {
+        $this->beforeTrigger();
         // If target file not exist, create target file
-        if(!file_exists($this->targetFileFullPath)) {
-            $manager->save($path, $quality);
-            if(!is_null($this->pageImage)) {
-                $pageimage = clone $this->pageImage;
-                $pageimage->setFilename($path);
-                $pageimage->setOriginal($this->pageImage);
+        if($this->hasTarget === FALSE) {
+            $manager = $this->returnTrigger('save', array($this->targetFileFullPath, $quality));
+            if(!is_null($this->pageImage)) return $this->setProcessWireImage($manager);
+            return $this->targetFileFullPath;
+        }
+        if(!is_null($this->pageImage)) return $this->setProcessWireImage();
+        else return $this->targetFileFullPath;
+    }
 
-                return $pageimage;
-            }
-            return $path;
+    protected function setProcessWireImage($manager=NULL, $debug=false) {
+        if($debug === true) {
+            echo "<pre>" . print_r(array(
+                    '_suffix' => $this->_suffix,
+                    'image' => $this->image,
+                    'targetFileName' => $this->targetFilename,
+                    'targetFileExtension' => $this->targetFileExtension,
+                    'targetFullFilename' => $this->targetFullFilename,
+                    'targetFilePath' => $this->targetFilePath,
+                    'targetFileFullPath' => $this->targetFileFullPath
+                ), true) . "</pre>";
         }
 
-        if(!is_null($this->pageImage)) {
-            $pageimage = clone $this->pageImage;
-            $pageimage->setFilename($path);
-            $pageimage->setOriginal($this->pageImage);
-            return $pageimage;
-        } else {
-            return $path;
-        }
+        $pageimage = clone $this->pageImage;
+        $pageimage->setFilename($this->targetFileFullPath);
+        $pageimage->setOriginal($this->pageImage);
+        wireChmod($this->targetFileFullPath);
+        if(!is_null($manager)) $manager->destroy();
+        return $pageimage;
     }
 }

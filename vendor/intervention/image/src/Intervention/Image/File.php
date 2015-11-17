@@ -61,7 +61,7 @@ class File
 
      /**
       * Get file size
-      *
+      * 
       * @return mixed
       */
     public function filesize()
@@ -71,7 +71,7 @@ class File
         if (file_exists($path) && is_file($path)) {
             return filesize($path);
         }
-
+        
         return false;
     }
 
