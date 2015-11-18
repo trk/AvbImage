@@ -11,6 +11,7 @@ use Intervention\Image\ImageManager;
  * @projectWebsite  : https://github.com/trk/AvbImage
  */
 class AvbImageManager extends Wire {
+    protected $imageManager;
     // Function Triggers : This is for true suffix replacement
     protected $triggers = NULL;
     // Target PATH
@@ -76,7 +77,7 @@ class AvbImageManager extends Wire {
     protected $sourceFileExtension=NULL;
 
     // Target file options
-    protected $hasTarget=FALSE;
+    protected $hasTarget;
     protected $targetFilename;
     protected $targetFileExtension;
     protected $targetFullFilename;
@@ -108,7 +109,7 @@ class AvbImageManager extends Wire {
     {
         // Set Custom Configs
         $this->configure($config);
-
+        $this->hasTarget = FALSE;
         // Check source exist?
         if(!is_null($this->config['pageImage']) && file_exists($this->config['pageImage']->filename)) {
             $this->pageImage = $this->config['pageImage'];
@@ -159,7 +160,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function backup($name = 'default') {
-        return $this->returnTrigger('backup', $name);
+        $this->make(TRUE);
+        return $this->imageManager->backup($name);
     }
 
     /**
@@ -169,7 +171,8 @@ class AvbImageManager extends Wire {
      * @return mixed
      */
     public function getBackup($name = null) {
-        return $this->returnTrigger('getBackup', $name);
+        $this->make(TRUE);
+        return $this->imageManager->getBackup($name);
     }
 
     /**
@@ -178,7 +181,8 @@ class AvbImageManager extends Wire {
      * @return array
      */
     public function getBackups() {
-        return $this->returnTrigger('getBackups');
+        $this->make(TRUE);
+        return $this->imageManager->getBackups();
     }
 
     /**
@@ -298,7 +302,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function destroy() {
-        return $this->returnTrigger('destroy');
+        $this->make(TRUE);
+        return $this->imageManager->destroy();
     }
 
     /**
@@ -330,7 +335,8 @@ class AvbImageManager extends Wire {
      * @return mixed
      */
     public function exif($key = null) {
-        return $this->returnTrigger('exif', array($key));
+        $this->make(TRUE);
+        return $this->imageManager->exif($key);
     }
 
     /**
@@ -340,7 +346,8 @@ class AvbImageManager extends Wire {
      * @return mixed
      */
     public function iptc($key = null) {
-        return $this->returnTrigger('iptc', array($key));
+        $this->make(TRUE);
+        return $this->imageManager->iptc($key);
     }
 
     /**
@@ -423,7 +430,8 @@ class AvbImageManager extends Wire {
      * @return integer
      */
     public function height() {
-        return $this->returnTrigger('getHeight');
+        $this->make(TRUE);
+        return $this->imageManager->getHeight();
     }
 
     /**
@@ -560,7 +568,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function pickColor($x, $y, $format = 'array') {
-        return $this->returnTrigger('pickColor', array($x, $y, $format));
+        $this->make(TRUE);
+        return $this->imageManager->pickColor($x, $y, $format);
     }
 
     /**
@@ -631,7 +640,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function reset($name = 'default') {
-        return $this->returnTrigger('reset', array($name));
+        $this->make(TRUE);
+        return $this->imageManager->reset($name);
     }
 
     /**
@@ -680,7 +690,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function response($format = null, $quality = 90) {
-        return $this->returnTrigger('response', array($format, $quality));
+        $this->make(TRUE);
+        return $this->imageManager->response($format, $quality);
     }
 
     /**
@@ -751,7 +762,8 @@ class AvbImageManager extends Wire {
      * @return integer
      */
     public function width() {
-        return $this->returnTrigger('getWidth');
+        $this->make(TRUE);
+        return $this->imageManager->getWidth();
     }
 
     /**
@@ -777,7 +789,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function stream($format = null, $quality = 90) {
-        return $this->returnTrigger('stream', array($format, $quality));
+        $this->make(TRUE);
+        return $this->imageManager->stream($format, $quality);
     }
 
     /**
@@ -788,7 +801,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function psrResponse($format = null, $quality = 90) {
-        return $this->returnTrigger('psrResponse', array($format, $quality));
+        $this->make(TRUE);
+        return $this->imageManager->psrResponse($format, $quality);
     }
 
     /**
@@ -799,7 +813,8 @@ class AvbImageManager extends Wire {
      * @return $this
      */
     public function encode($format = null, $quality = null) {
-        return $this->returnTrigger('encode', array($format, $quality));
+        $this->make(TRUE);
+        return $this->imageManager->encode($format, $quality);
     }
 
     /**
@@ -808,7 +823,8 @@ class AvbImageManager extends Wire {
      * @return boolean
      */
     public function isEncoded() {
-        return $this->returnTrigger('isEncoded');
+        $this->make(TRUE);
+        return $this->imageManager->isEncoded();
     }
 
     /**
@@ -819,7 +835,8 @@ class AvbImageManager extends Wire {
      * @return mixed
      */
     public function getCore() {
-        return $this->returnTrigger('getCore');
+        $this->make(TRUE);
+        return $this->imageManager->getCore();
     }
 
     /**
@@ -828,7 +845,8 @@ class AvbImageManager extends Wire {
      * @return mixed
      */
     public function filesize() {
-        return $this->returnTrigger('filesize');
+        $this->make(TRUE);
+        return $this->imageManager->filesize();
     }
 
     /**
@@ -837,7 +855,8 @@ class AvbImageManager extends Wire {
      * @return mixed
      */
     public function mime() {
-        return $this->returnTrigger('mime');
+        $this->make(TRUE);
+        return $this->imageManager->mime();
     }
 
     /**
@@ -846,9 +865,13 @@ class AvbImageManager extends Wire {
      * @return string
      */
     public function basePath() {
-        return $this->returnTrigger('basePath');
+        $this->make(TRUE);
+        return $this->imageManager->basePath();
     }
 
+    /**
+     * Set Target file suffix
+     */
     protected function setSuffix() {
         // Check Suffix
         if(is_null($this->_suffix)) {
@@ -875,8 +898,13 @@ class AvbImageManager extends Wire {
         );
 
         $this->_suffix = $suffixStr;
+
+        return;
     }
 
+    /**
+     * Set Target File infos
+     */
     protected function setTargetFile() {
 
         $this->targetFilename = $this->sourceFilename . $this->_suffix;
@@ -887,27 +915,43 @@ class AvbImageManager extends Wire {
         $this->targetFileFullPath = $this->targetPath . $this->targetFullFilename;
 
         if(file_exists($this->targetFileFullPath)) $this->hasTarget = TRUE;
+        return;
+    }
+
+    /**
+     * Run Image::Make($image);
+     *
+     * @param bool|FALSE $beforeTrigger
+     */
+    protected function make($beforeTrigger=FALSE) {
+        if($beforeTrigger === TRUE) $this->beforeTrigger();
+
+        if(is_null($this->imageManager)) {
+            $this->imageManager = new ImageManager(array(
+                'driver' => $this->config['driver']
+            ));
+
+            if($this->hasTarget === TRUE) $image = $this->targetFileFullPath;
+            else $image = $this->image;
+
+            $this->imageManager = $this->imageManager->make($image);
+
+            if($this->hasTarget === FALSE) $this->triggerRunner();
+        }
+
+        return;
     }
 
     /**
      * This trigger working for return functions
-     *
-     * @param $function
-     * @param array $args
-     * @return mixed
      */
-    protected function returnTrigger($function, $args = array()) {
-
+    protected function returnTrigger() {
         $this->beforeTrigger();
-
         if($this->hasTarget === FALSE) {
-            $imageManager = new ImageManager(array(
-                'driver' => $this->config['driver']
-            ));
-
-            $manager = $imageManager->make($this->image);
-            return $this->callFunction($manager, $function, $args, true);
+            $this->make();
+            $this->triggerRunner();
         }
+        return;
     }
 
     /**
@@ -916,13 +960,44 @@ class AvbImageManager extends Wire {
      * @param $manager
      * @return string
      */
-    protected function triggerRunner($manager) {
+    protected function triggerRunner() {
         if(is_array($this->triggers)) {
             foreach($this->triggers as $function => $args) {
-                $manager = $this->callFunction($manager, $function, $args);
+                $this->callFunction($function, $args);
             }
         }
-        return $manager;
+        return;
+    }
+
+    /**
+     * Call Given function with args
+     *
+     * @param $function
+     * @param array $args
+     */
+    protected function callFunction($function, $args=array()) {
+        switch (count($args)) {
+            case 0:
+                $this->imageManager = $this->imageManager->{$function}();
+                break;
+            case 1:
+                $this->imageManager = $this->imageManager->{$function}($this->isNullIsFalse($args[0]));
+                break;
+            case 2:
+                $this->imageManager = $this->imageManager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]));
+                break;
+            case 3:
+                $this->imageManager = $this->imageManager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]), $this->isNullIsFalse($args[2]));
+                break;
+            case 4:
+                $this->imageManager = $this->imageManager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]), $this->isNullIsFalse($args[2]), $this->isNullIsFalse($args[3]));
+                break;
+            case 5:
+                $this->imageManager = $this->imageManager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]), $this->isNullIsFalse($args[2]), $this->isNullIsFalse($args[3]), $this->isNullIsFalse($args[4]));
+                break;
+            default: $this->imageManager = call_user_func_array(array($this->imageManager, $function), $args); break;
+        }
+        return;
     }
 
     /**
@@ -935,41 +1010,6 @@ class AvbImageManager extends Wire {
         if(is_null($this->targetFileFullPath)) $this->setTargetFile();
         return;
     }
-
-    /**
-     * Call Given function with args
-     *
-     * @param $manager
-     * @param $function
-     * @param array $args
-     * @param bool|false $return
-     * @return string
-     */
-    protected function callFunction($manager, $function, $args=array(), $return=false) {
-        switch (count($args)) {
-            case 0:
-                $rtrn = $manager->{$function}();
-                break;
-            case 1:
-                $rtrn = $manager->{$function}($this->isNullIsFalse($args[0]));
-                break;
-            case 2:
-                $rtrn = $manager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]));
-                break;
-            case 3:
-                $rtrn = $manager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]), $this->isNullIsFalse($args[2]));
-                break;
-            case 4:
-                $rtrn = $manager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]), $this->isNullIsFalse($args[2]), $this->isNullIsFalse($args[3]));
-                break;
-            case 5:
-                $rtrn = $manager->{$function}($this->isNullIsFalse($args[0]), $this->isNullIsFalse($args[1]), $this->isNullIsFalse($args[2]), $this->isNullIsFalse($args[3]), $this->isNullIsFalse($args[4]));
-                break;
-            default: $rtrn = call_user_func_array(array($manager, $function), $args); break;
-        }
-        if($return === true) return $rtrn;
-    }
-
     /**
      * Check value is null or bool and return result
      *
@@ -988,36 +1028,47 @@ class AvbImageManager extends Wire {
      * @param null $quality
      * @return array|null
      */
-    public function save($quality = null) {
-        $this->beforeTrigger();
+    public function save($quality = null, $debug=NULL) {
+        $this->returnTrigger();
         // If target file not exist, create target file
         if($this->hasTarget === FALSE) {
-            $manager = $this->returnTrigger('save', array($this->targetFileFullPath, $quality));
-            if(!is_null($this->pageImage)) return $this->setProcessWireImage($manager);
+            $this->imageManager->save($this->targetFileFullPath, $quality);
+            if(!is_null($this->pageImage)) return $this->setProcessWireImage();
             return $this->targetFileFullPath;
         }
         if(!is_null($this->pageImage)) return $this->setProcessWireImage();
         else return $this->targetFileFullPath;
     }
 
-    protected function setProcessWireImage($manager=NULL, $debug=false) {
-        if($debug === true) {
-            echo "<pre>" . print_r(array(
-                    '_suffix' => $this->_suffix,
-                    'image' => $this->image,
-                    'targetFileName' => $this->targetFilename,
-                    'targetFileExtension' => $this->targetFileExtension,
-                    'targetFullFilename' => $this->targetFullFilename,
-                    'targetFilePath' => $this->targetFilePath,
-                    'targetFileFullPath' => $this->targetFileFullPath
-                ), true) . "</pre>";
-        }
-
+    /**
+     * Set ProcessWire Image
+     *
+     * @return array|null
+     * @throws WireException
+     */
+    protected function setProcessWireImage() {
         $pageimage = clone $this->pageImage;
         $pageimage->setFilename($this->targetFileFullPath);
         $pageimage->setOriginal($this->pageImage);
         wireChmod($this->targetFileFullPath);
-        if(!is_null($manager)) $manager->destroy();
+        if(!is_null($this->imageManager)) $this->imageManager->destroy();
         return $pageimage;
+    }
+
+    /**
+     * Get Debug Info
+     *
+     * @return string
+     */
+    protected function debug() {
+        return "<pre>" . print_r(array(
+                '_suffix' => $this->_suffix,
+                'image' => $this->image,
+                'targetFileName' => $this->targetFilename,
+                'targetFileExtension' => $this->targetFileExtension,
+                'targetFullFilename' => $this->targetFullFilename,
+                'targetFilePath' => $this->targetFilePath,
+                'targetFileFullPath' => $this->targetFileFullPath
+            ), true) . "</pre>";
     }
 }
