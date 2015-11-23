@@ -1028,8 +1028,11 @@ class AvbImageManager extends Wire {
      * @param null $quality
      * @return array|null
      */
-    public function save($quality = null, $debug=NULL) {
+    public function save($quality = NULL, $debug=NULL) {
         $this->returnTrigger();
+
+        if(!is_null($debug) && $debug === TRUE) return $this->debug();
+
         // If target file not exist, create target file
         if($this->hasTarget === FALSE) {
             $this->imageManager->save($this->targetFileFullPath, $quality);
